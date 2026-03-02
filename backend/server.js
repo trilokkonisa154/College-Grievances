@@ -49,7 +49,13 @@ app.use("/api/grievance",require("./routes/grievanceRoutes"));
 
 // 🔥 MONGODB CONNECTION
 mongoose.connect(process.env.MONGO_URI)
-.then(()=>console.log("MongoDB Connected"))
+.then(()=>{
+ console.log("MongoDB Connected");
+
+ // 👇 ADD THIS
+ const { createDefaultAdmin } = require("./controllers/authController");
+ createDefaultAdmin();
+})
 .catch(err=>console.log(err));
 
 
