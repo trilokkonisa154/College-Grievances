@@ -1,0 +1,62 @@
+<div class="auth-bg">
+
+<div class="auth-card">
+<h2 style="text-align:center;color:#3f05fe; font-variant:small-caps;">Cutm Grievance Portal</h2>
+<h3 class="auth-title" style="font-style:italic">- Register -</h3>
+
+<div style="margin-bottom:15px">
+<button
+class="role-btn"
+[ngClass]="role=='student'?'role-active':''"
+(click)="role='student'">
+Student
+</button>
+
+<button
+class="role-btn"
+[ngClass]="role=='faculty'?'role-active':''"
+(click)="role='faculty'">
+Faculty
+</button>
+</div>
+
+<div class="input-group">
+<input
+placeholder="Name"
+[(ngModel)]="name">
+</div>
+
+<div class="input-group">
+<input
+placeholder="Reg No / Emp ID"
+[(ngModel)]="idNumber">
+</div>
+
+<div class="input-group">
+<input
+placeholder="Email"
+[(ngModel)]="email">
+</div>
+
+<div class="input-group">
+<input
+[type]="show?'text':'password'"
+placeholder="Password"
+[(ngModel)]="password">
+</div>
+
+<button
+class="primary"
+(click)="register()">
+Register
+</button>
+
+<div
+class="link"
+(click)="goLogin()">
+Already have account?
+</div>
+
+</div>
+
+</div>

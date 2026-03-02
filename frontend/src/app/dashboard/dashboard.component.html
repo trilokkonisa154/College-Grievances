@@ -1,0 +1,46 @@
+<div class="sidebar">
+
+<h2>Grievance Portal</h2>
+
+<div *ngIf="user.role!='admin'">
+<button (click)="go('/report')" class="dashboard-btn">Raise Grievance</button>
+<button (click)="go('/track')" class="dashboard-btn">Complaints</button>
+</div>
+
+<div *ngIf="user.role=='admin'">
+<button (click)="go('/track')" class="dashboard-btn">All Records</button>
+</div>
+
+<button (click)="logout()" class="logout-btn">Logout</button>
+
+</div>
+
+<div class="main">
+<h2>Welcome {{user.name}}</h2>
+<div *ngIf="user.role!='admin'" class="card">
+
+<h3>Your Complaint Stats</h3>
+
+<div class="chart-box">
+<canvas id="dashboardChart"></canvas>
+</div>
+<p>Total : {{total}}</p>
+<p>Pending : {{pending}}</p>
+<p>In Progress : {{progress}}</p>
+<p>Resolved : {{resolved}}</p>
+
+</div>
+
+<div *ngIf="user.role=='admin'" class="card">
+
+<h3>Complaint Overview</h3>
+
+<p>Total : {{total}}</p>
+<p>Academic : {{academic}}</p>
+<p>Hostel : {{hostel}}</p>
+<p>Examination : {{exam}}</p>
+<p>Infrastructure : {{infra}}</p>
+<p>Other : {{other}}</p>
+
+</div>
+</div>
