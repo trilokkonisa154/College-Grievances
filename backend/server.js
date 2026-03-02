@@ -49,14 +49,14 @@ app.use("/api/grievance",require("./routes/grievanceRoutes"));
 
 // 🔥 MONGODB CONNECTION
 mongoose.connect(process.env.MONGO_URI)
-.then(()=>{
+.then(async () => {
  console.log("MongoDB Connected");
 
- // 👇 ADD THIS
  const { createDefaultAdmin } = require("./controllers/authController");
- createDefaultAdmin();
+ await createDefaultAdmin();
+
 })
-.catch(err=>console.log(err));
+.catch(err => console.log(err));
 
 
 // 🔥 RENDER PORT

@@ -38,9 +38,6 @@ exports.login=async(req,res)=>{
  });
 };
 
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
-
 exports.createDefaultAdmin = async () => {
  try {
   const adminExists = await User.findOne({ role: "admin" });
