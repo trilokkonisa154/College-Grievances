@@ -4,11 +4,26 @@ const connectDB=require("./config/db");
 const mongoose = require("mongoose");
 
 const app=express();
-app.use(cors({
+const corsOptions={
  origin:"https://college-grievance-tracking-portal.netlify.app",
- methods:["GET","POST","PUT","DELETE","OPTIONS"],
+ methods:["GET","POST","PUT","DELETE"],
  allowedHeaders:["Content-Type","Authorization"]
-}));
+};
+
+app.use(cors(corsOptions));
+
+// 👇 EXPRESS 5 SAFE OPTIONS FIX
+app.use((req,res,next)=>{
+ res.header("Access-Control-Allow-Origin","https://college-grievance-tracking-portal.netlify.app");
+ res.header("Access-Control-Allow-Methods","GET,POST,PUT,DELETE,OPTIONS");
+ res.header("Access-Control-Allow-Headers","Content-Type,Authorization");
+
+ if(req.method==="OPTIONS"){
+  return res.sendStatus(200);
+ }
+
+ next();
+});
 
 app.use(express.json());
 
