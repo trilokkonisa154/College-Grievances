@@ -1,6 +1,7 @@
 const express=require("express");
 const cors=require("cors");
 const connectDB=require("./config/db");
+const mongoose = require("mongoose");
 
 const app=express();
 app.use(cors({
@@ -21,6 +22,11 @@ app.use("/uploads",require("express").static("uploads"));
 
 const User=require("./models/User");
 const bcrypt=require("bcryptjs");
+const fs = require("fs");
+
+if(!fs.existsSync("uploads")){
+ fs.mkdirSync("uploads");
+}
 
 async function createDefaultAdmin(){
 
