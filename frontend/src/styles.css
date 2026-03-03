@@ -312,3 +312,25 @@ img{
 img:hover{
  transform:scale(1.1);
 }
+
+@media (max-width: 768px) {
+
+  .card {
+    width: 95% !important;
+    padding: 15px !important;
+  }
+
+  .dashboard-grid {
+    flex-direction: column !important;
+  }
+
+  .chart-container {
+    width: 100% !important;
+    height: 250px !important;
+  }
+
+  button {
+    width: 100%;
+  }
+
+}
