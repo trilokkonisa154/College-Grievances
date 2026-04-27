@@ -1,110 +1,96 @@
-import {Component,OnInit} from '@angular/core';
-import {GrievanceService} from '../services/grievance.service';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { GrievanceService } from '../services/grievance.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
- selector:'app-track',
- standalone:true,
- imports:[CommonModule,FormsModule],
- templateUrl:'./track.component.html'
+  selector: 'app-track',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './track.component.html'
 })
-export class TrackComponent implements OnInit{
+export class TrackComponent implements OnInit {
 
- grouped:{[key:string]:any[]}={};
- user:any;
+  grouped: { [key: string]: any[] } = {};
+  user: any;
 
- selectedCategory="All";
- categories:string[]=[];
- originalData:any[]=[];
- constructor(private g:GrievanceService){}
+  selectedCategory = "All";
+  categories: string[] = [];
+  originalData: any[] = [];
 
- ngOnInit(){
+  baseUrl = "http://localhost:5000";
 
- this.user=JSON.parse(localStorage.getItem("user")||"{}");
+  constructor(
+    private g: GrievanceService,
+    private location: Location
+  ) {}
 
- this.g.getAll().subscribe((res)=>{
-
-  let data=res;
-
-  if(this.user.role!='admin'){
-   data=res.filter((g:any)=>
-    g.userMongoId===this.user._id
-   );
+  goBack() {
+    this.location.back();
   }
 
-  data=data.sort((a:any,b:any)=>
- b._id.toString().localeCompare(a._id.toString())
-);
-this.originalData=data;
+  ngOnInit() {
+    this.user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  this.categories=[
- "All",
- ...Array.from(
-  new Set(
-   res.map((g:any)=>g.category)
-  )
- )
-];
+    this.g.getAll().subscribe({
+      next: (res: any) => {
 
-  this.grouped=this.groupByCategory(data);
- });
-}
+        const data = (res || []).sort((a:any,b:any)=>
+          b._id.toString().localeCompare(a._id.toString())
+        );
 
- groupByCategory(data:any[]):{[key:string]:any[]}{
+        this.originalData = data;
 
- const result:{[key:string]:any[]}={};
+        const set = new Set<string>();
 
- data.forEach(item=>{
+        data.forEach((x:any)=>{
+          set.add(x.category || "Other");
+        });
 
-  if(!result[item.category])
-   result[item.category]=[];
+        this.categories = ["All", ...Array.from(set)];
 
-  result[item.category].push(item);
+        this.grouped = this.groupByCategory(data);
+      },
+      error: (err:any)=>{
+        console.log(err);
+      }
+    });
+  }
 
- });
+  groupByCategory(data:any[]) {
 
- return result;
+    const result:any = {};
 
-}
+    data.forEach((x:any)=>{
 
- update(id:any,status:any){
+      if(!result[x.category]){
+        result[x.category] = [];
+      }
 
-  this.g.updateStatus({id,status}).subscribe(()=>{
-   this.ngOnInit();
-  });
- }
+      result[x.category].push(x);
 
- filterCategory(){
+    });
 
- let filtered=this.originalData;
+    return result;
+  }
 
- if(this.selectedCategory!="All"){
+  update(id:any,status:any){
+    this.g.updateStatus({id,status}).subscribe(()=>{
+      this.ngOnInit();
+    });
+  }
 
-  filtered=this.originalData.filter((g:any)=>
-   g.category==this.selectedCategory
-  );
+  filterCategory(){
 
- }
+    let filtered = this.originalData;
 
- this.grouped=this.groupByCategory(filtered);
-}
+    if(this.selectedCategory !== "All"){
+      filtered = this.originalData.filter((x:any)=>
+        x.category === this.selectedCategory
+      );
+    }
 
-getStatusClass(status:any){
-
- if(status=="Pending")
-  return "bg-yellow-200 text-yellow-800";
-
- if(status=="In Progress")
-  return "bg-blue-200 text-blue-800";
-
- if(status=="Resolved")
-  return "bg-green-200 text-green-800";
-
- if(status=="Rejected")
-  return "bg-red-200 text-red-800";
-
- return "";
-}
-
+    this.grouped = this.groupByCategory(filtered);
+  }
 }

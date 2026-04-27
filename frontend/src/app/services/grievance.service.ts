@@ -1,54 +1,39 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
-@Injectable({providedIn:'root'})
-export class GrievanceService{
+@Injectable({
+  providedIn:'root'
+})
+export class GrievanceService {
 
- constructor(private http:HttpClient){}
+  baseUrl = environment.apiUrl;
 
- getAll(){
+  constructor(private http:HttpClient){}
 
- const token=localStorage.getItem("token");
+  private headers(){
+    const token = localStorage.getItem("token");
 
- return this.http.get<any[]>(
-  "https://grievance-backend-lr1d.onrender.com/api/grievance/all",
-  {
-   headers:{
-    Authorization:"Bearer "+token
-   }
+    return {
+      headers:new HttpHeaders({
+        Authorization:`Bearer ${token}`
+      })
+    };
   }
- );
 
-}
+  submit(data:any){
+    return this.http.post(`${this.baseUrl}/api/grievance/submit`, data, this.headers());
+  }
 
- submit(data:any){
+  getAll(){
+    return this.http.get(`${this.baseUrl}/api/grievance/all`, this.headers());
+  }
 
-  const token=localStorage.getItem("token");
+  updateStatus(data:any){
+    return this.http.post(`${this.baseUrl}/api/grievance/status`, data, this.headers());
+  }
 
-  return this.http.post(
-   "https://grievance-backend-lr1d.onrender.com/api/grievance/submit",
-   data,
-   {
-    headers:{
-     Authorization:"Bearer "+token
-    }
-   }
-  );
- }
-
- updateStatus(data:any){
-
-  const token=localStorage.getItem("token");
-
-  return this.http.post(
-   "https://grievance-backend-lr1d.onrender.com/api/grievance/status",
-   data,
-   {
-    headers:{
-     Authorization:"Bearer "+token
-    }
-   }
-  );
- }
-
+  changePassword(data:any){
+    return this.http.post(`${this.baseUrl}/api/auth/change-password`, data, this.headers());
+  }
 }

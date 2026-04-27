@@ -1,16 +1,21 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
-@Injectable({providedIn:'root'})
-export class AuthService{
+@Injectable({
+  providedIn:'root'
+})
+export class AuthService {
 
- constructor(private http:HttpClient){}
+  baseUrl = environment.apiUrl;
 
- login(data:any){
-  return this.http.post("https://grievance-backend-lr1d.onrender.com/api/auth/login",data);
- }
+  constructor(private http:HttpClient){}
 
- register(data:any){
-  return this.http.post("https://grievance-backend-lr1d.onrender.com/api/auth/register",data);
- }
+  login(data:any){
+    return this.http.post(`${this.baseUrl}/api/auth/login`, data);
+  }
+
+  register(data:any){
+    return this.http.post(`${this.baseUrl}/api/auth/register`, data);
+  }
 }

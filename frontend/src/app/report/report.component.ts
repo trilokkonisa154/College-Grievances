@@ -1,61 +1,69 @@
-import {Component} from '@angular/core';
-import {GrievanceService} from '../services/grievance.service';
-
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {Router} from '@angular/router';
+import { Component } from '@angular/core';
+import { GrievanceService } from '../services/grievance.service';
+import { CommonModule, Location } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
- selector:'app-report',
- standalone:true,
- imports:[CommonModule,FormsModule],
- templateUrl:'./report.component.html'
+  selector: 'app-report',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './report.component.html'
 })
-export class ReportComponent{
+export class ReportComponent {
+  title = "";
+  description = "";
+  category = "";
+  user: any;
 
- title="";
- description="";
- category="Academic";
- user:any;
+  selectedFile: File | null = null;
 
- selectedFile:any;
- onFileSelect(event:any){
- this.selectedFile=event.target.files[0];
-}
+  constructor(
+    private g: GrievanceService,
+    private router: Router,
+    private location: Location
+  ) {
+    this.user = JSON.parse(localStorage.getItem("user") || "{}");
+  }
 
-constructor(private g:GrievanceService,
-            private router:Router){
-  this.user=JSON.parse(localStorage.getItem("user")||"{}");
- }
+  goBack() {
+    this.location.back();
+  }
 
- submit(){
+  onFileSelect(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+    }
+  }
 
- if(
-  !this.title?.trim() ||
-  !this.description?.trim() ||
-  !this.category
- ){
-  alert("Please fill all fields");
-  return;
- }
+  submit() {
+  console.log("Submit clicked");
 
- const formData=new FormData();
+  if (!this.title || !this.category || !this.description) {
+    alert("Please fill all fields");
+    return;
+  }
 
- formData.append("title",this.title);
- formData.append("description",this.description);
- formData.append("category",this.category);
- formData.append("userMongoId",this.user._id);
- formData.append("userId",this.user.idNumber);
- formData.append("userName",this.user.name);
+  const formData = new FormData();
+  formData.append("title", this.title);
+  formData.append("category", this.category);
+  formData.append("description", this.description);
+  formData.append("userName", this.user.name);
+  formData.append("userId", this.user.idNumber);
 
- if(this.selectedFile){
-  formData.append("image",this.selectedFile);
- }
+  if (this.selectedFile) {
+    formData.append("image", this.selectedFile);
+  }
 
- this.g.submit(formData).subscribe(()=>{
-  alert("Complaint Submitted Successfully");
-  this.router.navigate(['/track']);
- });
-
+  this.g.submit(formData).subscribe({
+    next: () => {
+      alert("Complaint submitted successfully");
+      this.router.navigate(['/track']);
+    },
+    error: (err) => {
+      console.log(err);
+      alert("Submission failed");
+    }
+  });
 }
 }

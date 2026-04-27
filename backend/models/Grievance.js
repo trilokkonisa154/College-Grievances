@@ -1,29 +1,49 @@
-const mongoose=require('mongoose');
+const mongoose = require("mongoose");
 
-const grievanceSchema=mongoose.Schema({
-
- image:String,   
- title:String,
- description:String,
- category:String,
-
- status:{
-  type:String,
-  default:"Pending"
- },
-
- userMongoId:String,
- userId:String,
- userName:String,
-
- updates:[
+const grievanceSchema = new mongoose.Schema(
   {
-   date:String,
-   note:String,
-   updatedBy:String
-  }
- ]
+    title: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    category: {
+      type: String,
+      required: true
+    },
+    userMongoId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+    userId: {
+      type: String,
+      required: true
+    },
+    userName: {
+      type: String,
+      required: true
+    },
+    image: {
+      type: String,
+      default: null
+    },
+    status: {
+      type: String,
+      default: "Pending"
+    },
+    updates: [
+      {
+        note: String,
+        date: String,
+        updatedBy: String
+      }
+    ]
+  },
+  { timestamps: true }
+);
 
-});
-
-module.exports=mongoose.model("Grievance",grievanceSchema);
+module.exports = mongoose.model("Grievance", grievanceSchema);

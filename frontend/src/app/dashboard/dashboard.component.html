@@ -1,46 +1,135 @@
-<div class="sidebar">
+<div class="portal-dashboard-page">
 
-<h2>Grievance Portal</h2>
+  <aside class="portal-sidebar">
+    <div class="portal-sidebar-top">
+      <div class="portal-brand-wrap">
+        <h2 class="portal-brand-title">Grievance Portal</h2>
+        <p class="portal-brand-subtitle">
+          {{ user.role | titlecase }} Panel
+        </p>
+      </div>
 
-<div *ngIf="user.role!='admin'">
-<button (click)="go('/report')" class="dashboard-btn">Raise Grievance</button>
-<button (click)="go('/track')" class="dashboard-btn">Complaints</button>
-</div>
+      <div class="portal-user-mini">
+        <div class="portal-user-avatar">
+          {{ user?.name ? (user.name[0] | uppercase) : 'U' }}
+        </div>
+        <div>
+          <h3>{{ user.name }}</h3>
+          <p>{{ user.role }}</p>
+        </div>
+      </div>
+    </div>
 
-<div *ngIf="user.role=='admin'">
-<button (click)="go('/track')" class="dashboard-btn">All Records</button>
-</div>
+    <div class="portal-sidebar-actions">
+      <button class="portal-nav-btn" (click)="showPasswordBox=!showPasswordBox">
+        Change Password
+      </button>
 
-<button (click)="logout()" class="logout-btn">Logout</button>
+      <div *ngIf="showPasswordBox" class="portal-change-box">
+        <input
+          type="password"
+          [(ngModel)]="newPassword"
+          placeholder="Enter New Password"
+          class="portal-pass-input"
+        />
 
-</div>
+        <button (click)="changePassword()" class="portal-update-btn">
+          Update Password
+        </button>
+      </div>
 
-<div class="main">
-<h2>Welcome {{user.name}}</h2>
-<div *ngIf="user.role!='admin'" class="card">
+      <div *ngIf="user.role!='admin'" class="portal-nav-group">
+        <button (click)="go('/report')" class="portal-nav-btn">Raise Grievance</button>
+        <button (click)="go('/track')" class="portal-nav-btn">Complaints</button>
+      </div>
 
-<h3>Your Complaint Stats</h3>
+      <div *ngIf="user.role=='admin'" class="portal-nav-group">
+        <button (click)="go('/track')" class="portal-nav-btn">All Records</button>
+      </div>
+    </div>
 
-<div class="chart-box">
-<canvas id="dashboardChart"></canvas>
-</div>
-<p>Total : {{total}}</p>
-<p>Pending : {{pending}}</p>
-<p>In Progress : {{progress}}</p>
-<p>Resolved : {{resolved}}</p>
+    <button (click)="logout()" class="portal-logout-btn">Logout</button>
+  </aside>
 
-</div>
+  <main class="portal-dashboard-main">
+    <div class="portal-topbar">
+      <div>
+        <h1>Welcome, {{user.name}}</h1>
+        <p>Manage complaints with a cleaner, faster dashboard.</p>
+      </div>
+    </div>
 
-<div *ngIf="user.role=='admin'" class="card">
+    <div *ngIf="user.role!='admin'" class="portal-stats-grid">
+      <div class="portal-stat-card">
+        <span>Total</span>
+        <h3>{{total}}</h3>
+      </div>
 
-<h3>Complaint Overview</h3>
+      <div class="portal-stat-card pending-card">
+        <span>Pending</span>
+        <h3>{{pending}}</h3>
+      </div>
 
-<p>Total : {{total}}</p>
-<p>Academic : {{academic}}</p>
-<p>Hostel : {{hostel}}</p>
-<p>Examination : {{exam}}</p>
-<p>Infrastructure : {{infra}}</p>
-<p>Other : {{other}}</p>
+      <div class="portal-stat-card progress-card">
+        <span>In Progress</span>
+        <h3>{{progress}}</h3>
+      </div>
 
-</div>
+      <div class="portal-stat-card resolved-card">
+        <span>Resolved</span>
+        <h3>{{resolved}}</h3>
+      </div>
+    </div>
+
+    <section *ngIf="user.role!='admin'" class="portal-panel-card portal-chart-card">
+      <div class="portal-panel-header">
+        <h3>Your Complaint Stats</h3>
+        <p>Quick overview of your grievance activity</p>
+      </div>
+
+      <div class="portal-chart-box">
+        <canvas id="dashboardChart"></canvas>
+      </div>
+    </section>
+
+    <div *ngIf="user.role=='admin'" class="portal-stats-grid">
+      <div class="portal-stat-card">
+        <span>Total</span>
+        <h3>{{total}}</h3>
+      </div>
+
+      <div class="portal-stat-card">
+        <span>Academic</span>
+        <h3>{{academic}}</h3>
+      </div>
+
+      <div class="portal-stat-card">
+        <span>Hostel</span>
+        <h3>{{hostel}}</h3>
+      </div>
+
+      <div class="portal-stat-card">
+        <span>Examination</span>
+        <h3>{{exam}}</h3>
+      </div>
+
+      <div class="portal-stat-card">
+        <span>Infrastructure</span>
+        <h3>{{infra}}</h3>
+      </div>
+
+      <div class="portal-stat-card">
+        <span>Other</span>
+        <h3>{{other}}</h3>
+      </div>
+    </div>
+
+    <section *ngIf="user.role=='admin'" class="portal-panel-card">
+      <div class="portal-panel-header">
+        <h3>Complaint Overview</h3>
+        <p>Category-wise summary for admin monitoring</p>
+      </div>
+    </section>
+  </main>
+
 </div>

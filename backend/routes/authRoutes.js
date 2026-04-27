@@ -1,23 +1,10 @@
-const router=require("express").Router();
-const {register,login}=require("../controllers/authController");
+const express = require("express");
+const router = express.Router();
+const authController = require("../controllers/authController");
+const authMiddleware = require("../middleware/authMiddleware");
 
-router.post("/register",register);
-router.post("/login",login);
-router.get("/resetAdmin",async(req,res)=>{
+router.post("/register", authController.register);
+router.post("/login", authController.login);
+router.post("/change-password", authMiddleware, authController.changePassword);
 
- const bcrypt=require("bcryptjs");
- const User=require("../models/User");
-
- const salt=await bcrypt.genSalt(10);
- const hashed=await bcrypt.hash("admin123",salt);
-
- await User.updateOne(
-  {email:"admin@college.edu"},
-  {password:hashed}
- );
-
- res.send("Admin Password Reset");
-
-});
-
-module.exports=router;
+module.exports = router;

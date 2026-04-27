@@ -32,26 +32,22 @@ export class RegisterComponent{
 
  register(){
 
-  const data={
-   name:this.name,
-   email:this.email,
-   password:this.password,
-   role:this.role,
-   idNumber:this.idNumber.toLowerCase()
-  };
+ this.auth.register({
+  name:this.name,
+  email:this.email,
+  password:this.password,
+  role:this.role,
+  idNumber:this.idNumber
+ })
+ .subscribe({
+  next:()=>{
+    alert("Registered successfully");
+     this.router.navigate(['/login']);
+    },
+  error:()=>{
+   alert("Registration failed");
+  }
+ });
 
-  this.auth.register(data).subscribe({
-
-   next:()=>{
-    alert("Registered Successfully");
-    this.router.navigate(['/login']);
-   },
-
-   error:()=>{
-    alert("Registration Failed");
-   }
-
-  });
-
- }
+}
 }
