@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://YOUR-RAILWAY-URL.up.railway.app'
+  apiUrl: 'https://college-grievance-backend.onrender.com'
 };
